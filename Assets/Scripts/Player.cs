@@ -5,8 +5,9 @@ using UnityEngine;
 public class Player : MonoBehaviour
 {
     //private GameObject spawnParent;
-    private Transform[] spawnPoints;
+    private Transform[] spawnPoints;    
     public bool Respawn;
+    public AudioClip GoodAreaSound;    
 
 	// Use this for initialization
 	void Start () {
@@ -19,13 +20,13 @@ public class Player : MonoBehaviour
         }
 
         spawnPoints = spawnParent.GetComponentsInChildren<Transform>();
-    }
+	}
 	
 	// Update is called once per frame
 	void Update () {
 		
         if(Respawn)
-            ReSpawn();	    
+            ReSpawn();                
 	}
 
     private void ReSpawn()
