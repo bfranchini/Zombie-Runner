@@ -8,13 +8,12 @@ public class DayCycle : MonoBehaviour {
     [Tooltip("Number of minutes per second that pass")]
     public float MinutesPerSecond = 60f;
 
-    private Transform transform;       
+      
     private float degreesPerFrame;
 
     // Use this for initialization
     void Start ()
 	{
-	    transform = GetComponent<Transform>();
 	}
 	
 	// Update is called once per frame
