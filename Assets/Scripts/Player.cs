@@ -6,8 +6,8 @@ public class Player : MonoBehaviour
 {
     //private GameObject spawnParent;
     private Transform[] spawnPoints;    
-    public bool Respawn;
-    public AudioClip GoodAreaSound;    
+    private bool Respawn; //used for testing respawn points
+    public Helicopter helicopter;
 
 	// Use this for initialization
 	void Start () {
@@ -39,5 +39,13 @@ public class Player : MonoBehaviour
         var respawnPoint = spawnPoints[Random.Range(1, spawnPoints.Length)];
 
         transform.position = respawnPoint.position;
+    }
+
+    private void OnFindClearArea()
+    {
+        Debug.Log("Found clear area in player");
+        helicopter.Call();
+        //deploy flare
+        //start spawning zombies
     }
 }

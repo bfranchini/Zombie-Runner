@@ -25,7 +25,9 @@ public class ClearAreaDetector : MonoBehaviour
 	    if (!(lastCollisionSeconds >= CollisionTimeThreshold) || clearAreaFound)
             return;
 
+        //clear area has been found
 	    clearAreaFound = true;
+        SendMessageUpwards("OnFindClearArea");
 
 	    if (audioSource.clip == null)
 	    {
@@ -43,9 +45,7 @@ public class ClearAreaDetector : MonoBehaviour
 	    {
 	        audioSource.clip = FoundAreaAudioClip;
             audioSource.Play();
-        }	        
-
-	    Debug.Log("Playing clear area");
+        }	        	    
 	}
 
     void OnTriggerStay(Collider collider)
