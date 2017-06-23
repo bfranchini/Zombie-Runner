@@ -6,7 +6,7 @@ public class ClearAreaDetector : MonoBehaviour
 {   
     [Tooltip("number of seconds that must pass without collision before heli can be called")]
     public float CollisionTimeThreshold = 1f;
-    public AudioClip FoundAreaAudioClip;
+    public AudioClip FoundAreaAudioClip;    
 
     private float lastCollisionSeconds;
     private AudioSource audioSource;
@@ -22,7 +22,7 @@ public class ClearAreaDetector : MonoBehaviour
 	void Update () {
         lastCollisionSeconds += Time.deltaTime;
 
-	    if (!(lastCollisionSeconds >= CollisionTimeThreshold) || clearAreaFound)
+	    if (!(lastCollisionSeconds >= CollisionTimeThreshold && Time.realtimeSinceStartup > 10f)|| clearAreaFound)
             return;
 
         //clear area has been found

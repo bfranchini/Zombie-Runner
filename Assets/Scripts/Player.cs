@@ -4,14 +4,26 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
-    //private GameObject spawnParent;
-    private Transform[] spawnPoints;    
-    private bool Respawn; //used for testing respawn points
     public Helicopter helicopter;
+    public AudioClip WhatHappened;
+    private Transform[] spawnPoints;    
+    private bool Respawn; //used for testing respawn points(make public and toggle)
+    private AudioSource innerVoice;    
 
-	// Use this for initialization
-	void Start () {
-		var spawnParent = GameObject.Find("Player Spawn Points");
+    // Use this for initialization
+    void Start ()
+    {
+        var audioSources = GetComponents<AudioSource>();
+        foreach (var audioSource in audioSources)
+        {
+            if (audioSource.priority == 1)
+                innerVoice = audioSource;
+        }
+
+        innerVoice.clip = WhatHappened;
+        innerVoice.Play();
+
+        var spawnParent = GameObject.Find("Player Spawn Points");
 
         if (spawnParent == null)
         {
