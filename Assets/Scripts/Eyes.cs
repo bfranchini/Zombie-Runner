@@ -18,8 +18,7 @@ public class Eyes : MonoBehaviour
 	// Update is called once per frame
 	void Update () {
 	    if (Input.GetButton("Zoom"))     
-	        eyes.fieldOfView = defaultFov / 1.5f;
-	        
+	        eyes.fieldOfView = defaultFov / 1.5f;	        
 	    else	    
 	        eyes.fieldOfView = defaultFov;                   
 	}
