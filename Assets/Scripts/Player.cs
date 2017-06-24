@@ -6,6 +6,7 @@ public class Player : MonoBehaviour
 {     
     private Transform[] spawnPoints;    
     private bool Respawn; //used for testing respawn points(make public and toggle)  
+    public GameObject LandingAreaPrefab;
 
     // Use this for initialization
     void Start ()
@@ -48,7 +49,8 @@ public class Player : MonoBehaviour
 
     private void DropFlare()
     {
-        //drop a flare
         Debug.Log("Dropped Flare");
+        var flarePosition = new Vector3(transform.position.x, LandingAreaPrefab.transform.position.y, transform.position.z);
+        Instantiate(LandingAreaPrefab, flarePosition, transform.rotation);
     }
 }
