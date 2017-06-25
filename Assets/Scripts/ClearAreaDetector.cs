@@ -8,12 +8,18 @@ public class ClearAreaDetector : MonoBehaviour
     public float CollisionTimeThreshold = 1f; 
     private float lastCollisionSeconds;    
     private bool clearAreaFound;
+    private int collisionCount;
 	
 	// Update is called once per frame
 	void Update () {
         lastCollisionSeconds += Time.deltaTime;
 
-	    if (!(lastCollisionSeconds >= CollisionTimeThreshold && Time.realtimeSinceStartup > 10f)|| clearAreaFound)
+        //Debug.Log("Collisions: " + collisionCount);
+        
+	    if (collisionCount > 0)
+	        lastCollisionSeconds = 0;
+
+	    if (!(lastCollisionSeconds >= CollisionTimeThreshold && Time.realtimeSinceStartup > 10f && collisionCount == 0)|| clearAreaFound)
             return;
 
         //clear area has been found
@@ -21,11 +27,17 @@ public class ClearAreaDetector : MonoBehaviour
         SendMessageUpwards("OnFindClearArea");	      
 	}
 
-    void OnTriggerStay(Collider collider)
-    {       
+    void OnTriggerEnter(Collider collider)
+    {        
         Debug.Log("Collided with " + collider.name);
 
-        if(collider.tag != "Player")
-            lastCollisionSeconds = 0;
+        //todo: add collision checks for gun & bullets
+        if (collider.tag != "Player")        
+            collisionCount++;                                         
+    }
+
+    void OnTriggerExit()
+    {
+        collisionCount--;
     }
 }
