@@ -3,41 +3,46 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class Helicopter : MonoBehaviour
-{    
+{
     //todo: make private
     private bool called;
-    public float Speed = 50f; //50f = 5 minutes
-    private AudioSource audioSource;
-    private Rigidbody rigidbody;
-    private GameObject landingArea;
-    private float travelTime;
+    private bool arrived;
+    public float TravelSpeed = 30f; //30f = 5 minutes(9000 meters / 300 seconds)
+    public float descentSpeed = 50f;
 
-	// Use this for initialization
-	void Start ()
-	{
-	    rigidbody = GetComponent<Rigidbody>();
-	}
+    private AudioSource audioSource;    
+    private GameObject landingArea;
+    private GameObject landingPoint;
+    private float travelTime;
 
     void Update()
     {
-        if (called)
+        if (called && !arrived)
         {
-            var step = Speed * Time.deltaTime;
+            var step = TravelSpeed * Time.deltaTime;
             travelTime += Time.deltaTime;
-            transform.position = Vector3.MoveTowards(transform.position, landingArea.transform.position, step);
+            transform.position = Vector3.MoveTowards(transform.position, landingPoint.transform.position, step);
+            return;
         }
+
+        if(!arrived)
+            return;        
+
+        var descentStep = descentSpeed * Time.deltaTime;
+        transform.position = Vector3.MoveTowards(transform.position, landingArea.transform.position, descentStep);
     }
 
     public void OnDispatchHelicopter()
     {
         if (!called)
-        {               
-            //find landing area
+        {
+            //find landing area & landing point
             landingArea = GameObject.FindGameObjectWithTag("LandingArea");
+            landingPoint = GameObject.FindGameObjectWithTag("LandingPoint");
 
-            if (landingArea == null)
+            if (landingPoint == null)
             {
-                Debug.LogError("Could not find landing area");
+                Debug.LogError("Could not find landing point");
                 return;
             }
 
@@ -50,6 +55,7 @@ public class Helicopter : MonoBehaviour
     {
         if (collider.tag == "LandingArea")
         {
+            arrived = true;
             Debug.Log("total flight seconds: " + travelTime);
         }
     }
