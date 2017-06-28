@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -8,12 +9,13 @@ public class Helicopter : MonoBehaviour
     private bool called;
     private bool arrived;
     public float TravelSpeed = 30f; //30f = 5 minutes(9000 meters / 300 seconds)
-    public float descentSpeed = 50f;
+    public float descentSpeed = 4f; //slow enough descent
 
     private AudioSource audioSource;    
     private GameObject landingArea;
     private GameObject landingPoint;
     private float travelTime;
+    private Vector3 targetDir;
 
     void Update()
     {
@@ -22,6 +24,15 @@ public class Helicopter : MonoBehaviour
             var step = TravelSpeed * Time.deltaTime;
             travelTime += Time.deltaTime;
             transform.position = Vector3.MoveTowards(transform.position, landingPoint.transform.position, step);
+
+            //rotate helicopter so it faces landing point
+            transform.LookAt(landingPoint.transform);
+            var eulerAngles = transform.rotation.eulerAngles;
+            eulerAngles.x = 0;
+            eulerAngles.z = 0;
+
+            transform.rotation = Quaternion.Euler(eulerAngles);
+
             return;
         }
 
@@ -45,6 +56,8 @@ public class Helicopter : MonoBehaviour
                 Debug.LogError("Could not find landing point");
                 return;
             }
+
+            targetDir = landingPoint.transform.position - transform.position;
 
             called = true;
             Debug.Log("Helicopter called");
