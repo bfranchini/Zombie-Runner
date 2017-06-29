@@ -26,13 +26,8 @@ public class Helicopter : MonoBehaviour
             transform.position = Vector3.MoveTowards(transform.position, landingPoint.transform.position, step);
 
             //rotate helicopter so it faces landing point
-            transform.LookAt(landingPoint.transform);
-            var eulerAngles = transform.rotation.eulerAngles;
-            eulerAngles.x = 0;
-            eulerAngles.z = 0;
-
-            transform.rotation = Quaternion.Euler(eulerAngles);
-
+            transform.LookAtTopDown(landingPoint.transform);
+            
             return;
         }
 
