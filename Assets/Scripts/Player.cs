@@ -7,6 +7,8 @@ public class Player : MonoBehaviour
     private Transform[] spawnPoints;    
     private bool Respawn; //used for testing respawn points(make public and toggle)  
     public GameObject LandingAreaPrefab;
+    public float PlayerHealth = 100f;
+    public bool IsDead;
 
     // Use this for initialization
     void Start ()
@@ -26,7 +28,10 @@ public class Player : MonoBehaviour
 	void Update () {
 		
         if(Respawn)
-            ReSpawn();                
+            ReSpawn();         
+        
+        if(IsDead)
+            Debug.Log("Player has died");
 	}
 
     private void ReSpawn()
@@ -57,8 +62,12 @@ public class Player : MonoBehaviour
     void OnTriggerEnter(Collider collider)
     {
         if (collider.transform.tag == "ZombieHand")
-        {
-            Debug.Log("Struck by zombie");
+        {            
+            var damage = collider.transform.GetComponentInParent<Zombie>().damage;
+            PlayerHealth -= damage;
+
+            if (PlayerHealth <= 0)
+                IsDead = true;
         }
     }
 }

@@ -33,13 +33,15 @@ public class Zombie : MonoBehaviour
 
     void OnTriggerEnter(Collider collider)
     {
-        if (collider.transform.GetComponent<Player>() != null)
-        {            
-            animator.SetBool("IsAttacking", true);
-            //TODO: figure out how to stop zombie movement while attacking. Look @ characterControl script
-  //          aiCharacterControl.move = false;
-            //aiCharacterControl.target = null;
-        }            
+        var player = collider.transform.GetComponent<Player>();
+
+        if (player == null) return;
+
+        animator.SetBool("IsAttacking", !player.IsDead);
+
+        //TODO: figure out how to stop zombie movement while attacking. Look @ characterControl script
+        //          aiCharacterControl.move = false;
+        //aiCharacterControl.target = null;
     }
 
     void OnTriggerExit(Collider collider)
