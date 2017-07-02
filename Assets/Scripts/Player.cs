@@ -53,4 +53,12 @@ public class Player : MonoBehaviour
         var flarePosition = new Vector3(transform.position.x, LandingAreaPrefab.transform.position.y, transform.position.z);
         Instantiate(LandingAreaPrefab, flarePosition, transform.rotation);
     }
+
+    void OnTriggerEnter(Collider collider)
+    {
+        if (collider.transform.tag == "ZombieHand")
+        {
+            Debug.Log("Struck by zombie");
+        }
+    }
 }

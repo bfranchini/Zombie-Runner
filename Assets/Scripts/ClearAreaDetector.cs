@@ -29,8 +29,6 @@ public class ClearAreaDetector : MonoBehaviour
 
     void OnTriggerEnter(Collider collider)
     {        
-        Debug.Log("Collided with " + collider.name);
-
         //todo: add collision checks for gun & bullets
         if (collider.tag != "Player")        
             collisionCount++;                                         
