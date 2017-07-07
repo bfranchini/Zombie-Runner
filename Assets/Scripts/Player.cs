@@ -3,12 +3,13 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class Player : MonoBehaviour
-{     
-    private Transform[] spawnPoints;    
-    private bool Respawn; //used for testing respawn points(make public and toggle)  
+{         
     public GameObject LandingAreaPrefab;
     public float PlayerHealth = 100f;
     public bool IsDead;
+    private Transform[] spawnPoints;
+    private bool Respawn; //used for testing respawn points(make public and toggle)  
+    private Gun gun;
 
     // Use this for initialization
     void Start ()
@@ -22,16 +23,23 @@ public class Player : MonoBehaviour
         }
 
         spawnPoints = spawnParent.GetComponentsInChildren<Transform>();
-	}
+        gun = GetComponentInChildren<Gun>();
+    }
 	
 	// Update is called once per frame
 	void Update () {
 		
         if(Respawn)
-            ReSpawn();         
-        
-        if(IsDead)
+            ReSpawn();
+
+	    if (IsDead)
+	    {
             Debug.Log("Player has died");
+            return;	        
+	    }
+            
+	    if (Input.GetButtonDown("Fire1"))	    
+	        gun.Fire();	    
 	}
 
     private void ReSpawn()
