@@ -6,14 +6,15 @@ public class Gun : MonoBehaviour
 {
     public int BulletCount = 6;
     public AudioClip GunFire;
+    public GameObject Bullet;
+    public GameObject BulletEmitter;
     private Animator animator;
-    private AudioSource audioSource;
+    private AudioSource audioSource;    
 
 	// Use this for initialization
 	void Start ()
 	{
 	    animator = GetComponent<Animator>();
-
 	    audioSource = GetComponent<AudioSource>();
 	}
 	
@@ -25,11 +26,22 @@ public class Gun : MonoBehaviour
 
     public void Fire()
     {
-        if (audioSource.isPlaying && animator.GetCurrentAnimatorStateInfo(0).IsName("Fire"))
-            return;
+        if (BulletCount > 0)
+        {
+            if (audioSource.isPlaying && animator.GetCurrentAnimatorStateInfo(0).IsName("Fire"))
+                return;
 
-        audioSource.clip = GunFire;        
-        audioSource.Play();
-        animator.SetTrigger("Fire");
+            Instantiate(Bullet, BulletEmitter.transform.position, BulletEmitter.transform.rotation);
+
+            audioSource.clip = GunFire;
+            audioSource.Play();
+            animator.SetTrigger("Fire");
+            //todo: Re-enable
+            //   BulletCount--;
+        }
+        else
+        {
+            Debug.Log("Reload!");
+        }
     }
 }

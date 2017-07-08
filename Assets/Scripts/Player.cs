@@ -72,7 +72,8 @@ public class Player : MonoBehaviour
         if (collider.transform.tag == "ZombieHand")
         {            
             var damage = collider.transform.GetComponentInParent<Zombie>().damage;
-            PlayerHealth -= damage;
+            //todo: Re-enable
+          //  PlayerHealth -= damage;
 
             if (PlayerHealth <= 0)
                 IsDead = true;
