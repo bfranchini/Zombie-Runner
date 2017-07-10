@@ -53,4 +53,9 @@ public class Zombie : MonoBehaviour
             //aiCharacterControl.target = target;
         }            
     }
+
+    public void Damage(float damage)
+    {
+        Health -= damage;
+    }
 }

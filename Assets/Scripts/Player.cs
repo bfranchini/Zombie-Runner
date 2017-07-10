@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class Player : MonoBehaviour
-{         
+{
     public GameObject LandingAreaPrefab;
     public float PlayerHealth = 100f;
     public bool IsDead;
@@ -12,7 +12,7 @@ public class Player : MonoBehaviour
     private Gun gun;
 
     // Use this for initialization
-    void Start ()
+    void Start()
     {
         var spawnParent = GameObject.Find("Player Spawn Points");
 
@@ -25,29 +25,25 @@ public class Player : MonoBehaviour
         spawnPoints = spawnParent.GetComponentsInChildren<Transform>();
         gun = GetComponentInChildren<Gun>();
     }
-	
-	// Update is called once per frame
-	void Update () {
-		
-        if(Respawn)
+
+    // Update is called once per frame
+    void Update()
+    {
+
+        if (Respawn)
             ReSpawn();
 
-	    if (IsDead)
-	    {
+        if (IsDead)
             Debug.Log("Player has died");
-            return;	        
-	    }
-            
-	    if (Input.GetButtonDown("Fire1"))	    
-	        gun.Fire();	    
-	}
+
+    }
 
     private void ReSpawn()
     {
         Respawn = false;
 
         if (spawnPoints.Length == 0)
-            return; 
+            return;
 
         var respawnPoint = spawnPoints[Random.Range(1, spawnPoints.Length)];
 
@@ -57,7 +53,7 @@ public class Player : MonoBehaviour
     private void OnFindClearArea()
     {
         Debug.Log("Found clear area");
-        Invoke("DropFlare", 3f);     
+        Invoke("DropFlare", 3f);
     }
 
     private void DropFlare()
@@ -70,10 +66,10 @@ public class Player : MonoBehaviour
     void OnTriggerEnter(Collider collider)
     {
         if (collider.transform.tag == "ZombieHand")
-        {            
+        {
             var damage = collider.transform.GetComponentInParent<Zombie>().damage;
             //todo: Re-enable
-          //  PlayerHealth -= damage;
+            //  PlayerHealth -= damage;
 
             if (PlayerHealth <= 0)
                 IsDead = true;
