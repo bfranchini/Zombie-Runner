@@ -10,6 +10,7 @@ public class Gun : MonoBehaviour
     public float WeaponRange = 50f;
     public AudioClip GunFire;
     public GameObject BulletEmitter;
+    public GameObject BloodSquib;
     private Animator animator;
     private AudioSource audioSource;
     private WaitForSeconds shotDuration = new WaitForSeconds(.07f); //how long laser should be visible after gun is fired
@@ -61,11 +62,14 @@ public class Gun : MonoBehaviour
             {
                 //we hit something
                 laserLine.SetPosition(1, hit.point);
-
-                var zombie = hit.collider.GetComponent<Zombie>();
-
-                if(zombie != null)
+                
+                if (hit.collider.tag == "EnemyHitBox"/* != null*/)
+                {
+                    var zombie = hit.collider.GetComponentInParent<Zombie>();
                     zombie.Damage(GunDamage);
+                    Instantiate(BloodSquib, hit.point, Quaternion.identity, zombie.transform);
+                }
+                    
             }            
                 
             else
