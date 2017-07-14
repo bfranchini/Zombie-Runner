@@ -35,7 +35,6 @@ public class Player : MonoBehaviour
 
         if (IsDead)
             Debug.Log("Player has died");
-
     }
 
     private void ReSpawn()
@@ -67,7 +66,7 @@ public class Player : MonoBehaviour
     {
         if (collider.transform.tag == "ZombieHand")
         {
-            var damage = collider.transform.GetComponentInParent<Zombie>().damage;
+            var damage = collider.transform.GetComponentInParent<Zombie>().DamagePerHit;
             //todo: Re-enable
             //  PlayerHealth -= damage;
 

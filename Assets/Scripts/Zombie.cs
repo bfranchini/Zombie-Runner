@@ -7,52 +7,52 @@ using UnityStandardAssets.Characters.ThirdPerson;
 public class Zombie : MonoBehaviour
 {
     public float Health = 100f;
-    public float damage = 20f;
+    public float DamagePerHit = 20f;
+    public float AttackRange = 1.5f;
     private Animator animator;    
     private bool isDead;
-
+    private Transform enemyEyes;
 	// Use this for initialization
 	void Start ()
 	{
-	    animator = GetComponent<Animator>();	    
+	    animator = GetComponent<Animator>();
+	    enemyEyes = GameObject.FindGameObjectWithTag("EnemyEyes").transform;
 	}
 	
 	// Update is called once per frame
 	void Update ()
 	{
 	    if (isDead) return;
+        //TODO: figure out how to stop zombie movement while attacking.Look @ characterControl script
 
-	    if (Health > 0f) return;
+        if (Health > 0f)
+	    {
+	        RaycastHit hit;
 
-	    isDead = true;
+            Debug.DrawRay(enemyEyes.position, enemyEyes.forward * AttackRange, Color.red);
+
+	        var hitSomething = Physics.Raycast(enemyEyes.position, enemyEyes.forward, out hit, AttackRange);
+
+	        if (!hitSomething) return;
+
+	        var player = hit.collider.GetComponent<Player>();
+
+	        if (player != null)
+                //stop attacking player once he's dead
+	            animator.SetBool("IsAttacking", !player.IsDead); 
+	        else
+                //stop attacking player if he's out of range
+	            animator.SetBool("IsAttacking", false);
+
+	        return;
+        }
+        
+        isDead = true;
 	    GetComponent<NavMeshAgent>().enabled = false;
 	    GetComponent<AICharacterControl>().enabled = false;
 
         animator.SetTrigger("FallBack");
 	}
-
-    void OnTriggerEnter(Collider collider)
-    {
-        var player = collider.transform.GetComponent<Player>();
-
-        if (player == null) return;
-
-        animator.SetBool("IsAttacking", !player.IsDead);
-
-        //TODO: figure out how to stop zombie movement while attacking. Look @ characterControl script
-        //          aiCharacterControl.move = false;
-        //aiCharacterControl.target = null;
-    }
-
-    void OnTriggerExit(Collider collider)
-    {
-        if (collider.transform.GetComponent<Player>() != null)
-        {
-            animator.SetBool("IsAttacking", false);
-//            aiCharacterControl.move = true;
-            //aiCharacterControl.target = target;
-        }            
-    }
 
     public void Damage(float damage)
     {
