@@ -53,14 +53,13 @@ public class Gun : MonoBehaviour
             //Debug.DrawRay(rayOrigin, camera.transform.forward * WeaponRange, Color.green);
             var hitSomething = Physics.Raycast(rayOrigin, camera.transform.forward, out hit, WeaponRange);
 
-            if (hitSomething && hit.collider.GetComponent<Zombie>() != null)
-            {
-                var zombie = hit.collider.GetComponentInParent<Zombie>();
-                zombie.Damage(GunDamage);
+            if (!hitSomething || hit.collider.GetComponent<Zombie>() == null) return;
 
-                var blood = Instantiate(BloodSquib, hit.point, Quaternion.identity, zombie.transform);
-                Destroy(blood, .25f);
-            }
+            var zombie = hit.collider.GetComponentInParent<Zombie>();
+            zombie.Damage(GunDamage);
+
+            var blood = Instantiate(BloodSquib, hit.point, Quaternion.identity, zombie.transform);
+            Destroy(blood, .25f);
         }
     }
 
