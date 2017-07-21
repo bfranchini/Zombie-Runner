@@ -15,6 +15,7 @@ public class Gun : MonoBehaviour
     private WaitForSeconds shotDuration = new WaitForSeconds(.07f); //how long laser should be visible after gun is fired   
     private float nextFire; //holds time at which player will be allowed to fire again
     private Camera camera;
+    private Player player;
 
     // Use this for initialization
     void Start()
@@ -22,11 +23,14 @@ public class Gun : MonoBehaviour
         animator = GetComponent<Animator>();
         audioSource = GetComponent<AudioSource>();
         camera = GetComponentInParent<Camera>();
+        player = FindObjectOfType<Player>();
     }
 
     // Update is called once per frame
     void Update()
     {
+        if (player.IsDead) return;
+
         if (Input.GetButtonDown("Fire1") && Time.time > nextFire && BulletCount > 0)
         {
             if (BulletCount <= 0)
