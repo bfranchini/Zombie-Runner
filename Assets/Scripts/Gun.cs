@@ -4,18 +4,21 @@ using UnityEngine;
 
 public class Gun : MonoBehaviour
 {
-    public int BulletCount = 6;
+    public int MagazineBulletCount;
+    public int TotalAmmo = 30;
     public int GunDamage = 34;
     public float FireRate = .25f;
     public float WeaponRange = 50f;
     public AudioClip GunFire;
     public GameObject BloodSquib;
     private Animator animator;
+    private int magSize = 6;
     private AudioSource audioSource;
     private WaitForSeconds shotDuration = new WaitForSeconds(.07f); //how long laser should be visible after gun is fired   
     private float nextFire; //holds time at which player will be allowed to fire again
     private Camera camera;
     private Player player;
+    private UI ui;
 
     // Use this for initialization
     void Start()
@@ -24,6 +27,10 @@ public class Gun : MonoBehaviour
         audioSource = GetComponent<AudioSource>();
         camera = GetComponentInParent<Camera>();
         player = FindObjectOfType<Player>();
+        MagazineBulletCount = magSize;
+        ui = FindObjectOfType<UI>();
+        ui.UpdateMagCount(MagazineBulletCount);
+        ui.UpdateAmmoCount(TotalAmmo);
     }
 
     // Update is called once per frame
@@ -31,9 +38,15 @@ public class Gun : MonoBehaviour
     {
         if (player.IsDead) return;
 
-        if (Input.GetButtonDown("Fire1") && Time.time > nextFire && BulletCount > 0)
+        if (MagazineBulletCount <= 0)
         {
-            if (BulletCount <= 0)
+            Reload();
+            return;
+        }
+
+        if (Input.GetButtonDown("Fire1") && Time.time > nextFire && MagazineBulletCount > 0)
+        {
+            if (MagazineBulletCount <= 0)
             {
                 Debug.Log("Reload!");
                 return;
@@ -53,7 +66,7 @@ public class Gun : MonoBehaviour
             var rayOrigin = camera.ViewportToWorldPoint(new Vector3(0.5f, 0.5f, 0));
 
             RaycastHit hit;
-            
+
             //Debug.DrawRay(rayOrigin, camera.transform.forward * WeaponRange, Color.green);
             var hitSomething = Physics.Raycast(rayOrigin, camera.transform.forward, out hit, WeaponRange);
 
@@ -68,13 +81,33 @@ public class Gun : MonoBehaviour
     }
 
     private IEnumerator Fire()
-    {        
+    {
         audioSource.clip = GunFire;
         audioSource.Play();
         animator.SetTrigger("Fire");
-        //todo: Re-enable
-        //   BulletCount--;
+        MagazineBulletCount--;
+        ui.UpdateMagCount(MagazineBulletCount);
 
         yield return shotDuration;
+    }
+
+    public void Reload()
+    {
+        if (TotalAmmo <= 0)
+            return;
+
+        if (TotalAmmo >= magSize)
+        {
+            TotalAmmo -= magSize;
+            MagazineBulletCount = magSize;
+        }
+        else
+        {
+            MagazineBulletCount = TotalAmmo;
+            TotalAmmo = 0;
+        }
+
+        ui.UpdateMagCount(MagazineBulletCount);
+        ui.UpdateAmmoCount(TotalAmmo);
     }
 }

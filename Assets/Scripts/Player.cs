@@ -25,7 +25,7 @@ public class Player : MonoBehaviour
 
         spawnPoints = spawnParent.GetComponentsInChildren<Transform>();
         ui = FindObjectOfType<UI>();
-        ui.updateHealth(PlayerHealth);
+        ui.UpdateHealth(PlayerHealth);
     }
 
     // Update is called once per frame
@@ -77,7 +77,7 @@ public class Player : MonoBehaviour
             
         PlayerHealth -= damage;
 
-        ui.updateHealth(PlayerHealth);
+        ui.UpdateHealth(PlayerHealth);
 
         if (PlayerHealth <= 0)
         {
