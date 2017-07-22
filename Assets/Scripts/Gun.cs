@@ -4,7 +4,8 @@ using UnityEngine;
 
 public class Gun : MonoBehaviour
 {    
-    public int TotalAmmo = 30; //total amount of ammo player currently has
+    public int CurrentAmmo = 30; //total amount of ammo player currently has
+    public int MaxAmmo = 60; //max ammount of ammo player can carry at a given time
     public int GunDamage = 34;//it takes three shots to kill a zombie
     public float FireRate = .25f;
     public float WeaponRange = 50f;
@@ -14,7 +15,7 @@ public class Gun : MonoBehaviour
     public GameObject BloodSquib;
     public int MagSize = 6; //max number of bullets in per magazine
     private Animator animator;
-    private int magazineBulletCount; //current number of bullets in magazine
+    private int magazineBulletCount; //current number of bullets in magazine    
     private AudioSource audioSource;
     private WaitForSeconds shotDuration = new WaitForSeconds(.07f); //how long laser should be visible after gun is fired   
     private float nextFire; //holds time at which player will be allowed to fire again
@@ -32,7 +33,7 @@ public class Gun : MonoBehaviour
         magazineBulletCount = MagSize;
         ui = FindObjectOfType<UI>();
         ui.UpdateMagCount(magazineBulletCount);
-        ui.UpdateAmmoCount(TotalAmmo);
+        ui.UpdateAmmoCount(CurrentAmmo);
     }
 
     // Update is called once per frame
@@ -40,7 +41,7 @@ public class Gun : MonoBehaviour
     {
         if (player.IsDead) return;
 
-        if (Input.GetButtonDown("Fire1") && Time.time > nextFire && TotalAmmo <= 0 && magazineBulletCount <= 0)
+        if (Input.GetButtonDown("Fire1") && Time.time > nextFire && CurrentAmmo <= 0 && magazineBulletCount <= 0)
         {
             audioSource.clip = EmptyMag;
             audioSource.Play();
@@ -80,7 +81,7 @@ public class Gun : MonoBehaviour
             Destroy(blood, .25f);
         }
 
-        if (Input.GetButtonDown("Reload") && TotalAmmo > 0 && magazineBulletCount < MagSize)
+        if (Input.GetButtonDown("Reload") && CurrentAmmo > 0 && magazineBulletCount < MagSize)
         {
             //wait for any gun sounds to stop playing before reloading
             if(audioSource.isPlaying)
@@ -103,24 +104,37 @@ public class Gun : MonoBehaviour
 
     public void Reload()
     {
-        if (TotalAmmo <= 0)
+        if (CurrentAmmo <= 0)
             return;
 
         audioSource.clip = ReloadClip;
         audioSource.Play();
 
-        if (TotalAmmo >= MagSize)
+        if (CurrentAmmo >= MagSize)
         {
-            TotalAmmo -= MagSize;
+            CurrentAmmo -= MagSize;
             magazineBulletCount = MagSize;
         }
         else
         {
-            magazineBulletCount = TotalAmmo;
-            TotalAmmo = 0;
+            magazineBulletCount = CurrentAmmo;
+            CurrentAmmo = 0;
         }
 
         ui.UpdateMagCount(magazineBulletCount);
-        ui.UpdateAmmoCount(TotalAmmo);
+        ui.UpdateAmmoCount(CurrentAmmo);
+    }
+
+    public bool AddAmmo(int ammoCount)
+    {
+        if (CurrentAmmo >= MaxAmmo) return false;
+
+        if (CurrentAmmo + ammoCount > MaxAmmo)
+            CurrentAmmo += MaxAmmo - CurrentAmmo;
+        else
+            CurrentAmmo += ammoCount;
+
+        ui.UpdateAmmoCount(CurrentAmmo);            
+        return true;
     }
 }

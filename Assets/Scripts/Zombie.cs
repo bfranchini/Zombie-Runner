@@ -82,6 +82,4 @@ public class Zombie : MonoBehaviour
         audioSource.clip = clip;
         audioSource.Play();
     }
-
-
 }
