@@ -31,7 +31,6 @@ public class Player : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
         if (Respawn)
             ReSpawn();
 
@@ -61,7 +60,6 @@ public class Player : MonoBehaviour
 
     private void DropFlare()
     {        
-        Debug.Log("Dropped Flare");
         var flarePosition = new Vector3(transform.position.x, LandingAreaPrefab.transform.position.y, transform.position.z);
         Instantiate(LandingAreaPrefab, flarePosition, transform.rotation);
     }
@@ -84,7 +82,6 @@ public class Player : MonoBehaviour
             IsDead = true;
 
             GetComponent<FirstPersonController>().enabled = false;
-        }
-            
+        }            
     }
 }

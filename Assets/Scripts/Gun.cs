@@ -3,16 +3,18 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class Gun : MonoBehaviour
-{
-    public int MagazineBulletCount;
-    public int TotalAmmo = 30;
-    public int GunDamage = 34;
+{    
+    public int TotalAmmo = 30; //total amount of ammo player currently has
+    public int GunDamage = 34;//it takes three shots to kill a zombie
     public float FireRate = .25f;
     public float WeaponRange = 50f;
     public AudioClip GunFire;
+    public AudioClip ReloadClip;
+    public AudioClip EmptyMag;
     public GameObject BloodSquib;
+    public int MagSize = 6; //max number of bullets in per magazine
     private Animator animator;
-    private int magSize = 6;
+    private int magazineBulletCount; //current number of bullets in magazine
     private AudioSource audioSource;
     private WaitForSeconds shotDuration = new WaitForSeconds(.07f); //how long laser should be visible after gun is fired   
     private float nextFire; //holds time at which player will be allowed to fire again
@@ -27,9 +29,9 @@ public class Gun : MonoBehaviour
         audioSource = GetComponent<AudioSource>();
         camera = GetComponentInParent<Camera>();
         player = FindObjectOfType<Player>();
-        MagazineBulletCount = magSize;
+        magazineBulletCount = MagSize;
         ui = FindObjectOfType<UI>();
-        ui.UpdateMagCount(MagazineBulletCount);
+        ui.UpdateMagCount(magazineBulletCount);
         ui.UpdateAmmoCount(TotalAmmo);
     }
 
@@ -38,21 +40,20 @@ public class Gun : MonoBehaviour
     {
         if (player.IsDead) return;
 
-        if (MagazineBulletCount <= 0)
+        if (Input.GetButtonDown("Fire1") && Time.time > nextFire && TotalAmmo <= 0 && magazineBulletCount <= 0)
         {
-            Reload();
+            audioSource.clip = EmptyMag;
+            audioSource.Play();
             return;
         }
 
-        if (Input.GetButtonDown("Fire1") && Time.time > nextFire && MagazineBulletCount > 0)
+        if (Input.GetButtonDown("Fire1") && Time.time > nextFire && !audioSource.isPlaying)
         {
-            if (MagazineBulletCount <= 0)
-            {
-                Debug.Log("Reload!");
-                return;
-            }
-
-            if (audioSource.isPlaying && animator.GetCurrentAnimatorStateInfo(0).IsName("Fire"))
+            if (magazineBulletCount <= 0)
+                Reload();
+            
+            //we check audiosource again because reload sounds could be playing
+            if (audioSource.isPlaying || animator.GetCurrentAnimatorStateInfo(0).IsName("Fire"))
                 return;
 
             nextFire = Time.time + FireRate;
@@ -78,6 +79,15 @@ public class Gun : MonoBehaviour
             var blood = Instantiate(BloodSquib, hit.point, Quaternion.identity, zombie.transform);
             Destroy(blood, .25f);
         }
+
+        if (Input.GetButtonDown("Reload") && TotalAmmo > 0 && magazineBulletCount < MagSize)
+        {
+            //wait for any gun sounds to stop playing before reloading
+            if(audioSource.isPlaying)
+                Invoke("Reload", audioSource.clip.length - audioSource.time);
+            else         
+                Reload();            
+        }
     }
 
     private IEnumerator Fire()
@@ -85,8 +95,8 @@ public class Gun : MonoBehaviour
         audioSource.clip = GunFire;
         audioSource.Play();
         animator.SetTrigger("Fire");
-        MagazineBulletCount--;
-        ui.UpdateMagCount(MagazineBulletCount);
+        magazineBulletCount--;
+        ui.UpdateMagCount(magazineBulletCount);
 
         yield return shotDuration;
     }
@@ -96,18 +106,21 @@ public class Gun : MonoBehaviour
         if (TotalAmmo <= 0)
             return;
 
-        if (TotalAmmo >= magSize)
+        audioSource.clip = ReloadClip;
+        audioSource.Play();
+
+        if (TotalAmmo >= MagSize)
         {
-            TotalAmmo -= magSize;
-            MagazineBulletCount = magSize;
+            TotalAmmo -= MagSize;
+            magazineBulletCount = MagSize;
         }
         else
         {
-            MagazineBulletCount = TotalAmmo;
+            magazineBulletCount = TotalAmmo;
             TotalAmmo = 0;
         }
 
-        ui.UpdateMagCount(MagazineBulletCount);
+        ui.UpdateMagCount(magazineBulletCount);
         ui.UpdateAmmoCount(TotalAmmo);
     }
 }
