@@ -54,7 +54,7 @@ public class Gun : MonoBehaviour
                 Reload();
             
             //we check audiosource again because reload sounds could be playing
-            if (audioSource.isPlaying || animator.GetCurrentAnimatorStateInfo(0).IsName("Fire"))
+            if (audioSource.isPlaying || animator.GetCurrentAnimatorStateInfo(0).IsName("Fire") || animator.GetCurrentAnimatorStateInfo(0).IsName("ZoomedFire"))
                 return;
 
             nextFire = Time.time + FireRate;
@@ -71,6 +71,9 @@ public class Gun : MonoBehaviour
 
             //Debug.DrawRay(rayOrigin, camera.transform.forward * WeaponRange, Color.green);
             var hitSomething = Physics.Raycast(rayOrigin, playerCamera.transform.forward, out hit, WeaponRange);
+
+            if(hit.collider == null)
+                return;
 
             var enemyHealth = hit.collider.GetComponent<Health>();
 
