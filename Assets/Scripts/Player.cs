@@ -5,9 +5,9 @@ using UnityStandardAssets.Characters.FirstPerson;
 
 public class Player : MonoBehaviour
 {
-    public GameObject LandingAreaPrefab;    
-    public float PlayerHealth = 100f;
-    public bool IsDead;    
+    public GameObject LandingAreaPrefab;        
+    public bool IsDead;
+    private Health health;
     private Transform[] spawnPoints;
     private bool Respawn; //used for testing respawn points(make public and toggle)   
     private UI ui;
@@ -16,6 +16,7 @@ public class Player : MonoBehaviour
     void Start()
     {
         var spawnParent = GameObject.Find("Player Spawn Points");
+        health = GetComponent<Health>();
 
         if (spawnParent == null)
         {
@@ -25,7 +26,7 @@ public class Player : MonoBehaviour
 
         spawnPoints = spawnParent.GetComponentsInChildren<Transform>();
         ui = FindObjectOfType<UI>();
-        ui.UpdateHealth(PlayerHealth);
+        ui.UpdateHealth(health.GetCurrentHealth());
     }
 
     // Update is called once per frame
@@ -72,15 +73,12 @@ public class Player : MonoBehaviour
         if (collider.transform.tag != "ZombieHand") return;
 
         var damage = collider.transform.GetComponentInParent<Zombie>().DamagePerHit;
-            
-        PlayerHealth -= damage;
+                    
+        ui.UpdateHealth(health.TakeDamage(damage));
 
-        ui.UpdateHealth(PlayerHealth);
-
-        if (PlayerHealth <= 0)
+        if (health.GetCurrentHealth() <= 0)
         {
             IsDead = true;
-
             GetComponent<FirstPersonController>().enabled = false;
         }            
     }

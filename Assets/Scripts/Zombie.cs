@@ -6,11 +6,11 @@ using UnityStandardAssets.Characters.ThirdPerson;
 
 public class Zombie : MonoBehaviour
 {
-    public float Health = 100f;
-    public float DamagePerHit = 20f;
+    public int DamagePerHit = 20;
     public float AttackRange = 1.5f;
     public AudioClip[] Talking;
     public AudioClip Death;
+    private Health health;
     private Animator animator;
     private bool isDead;
     private bool isAttacking;
@@ -26,6 +26,7 @@ public class Zombie : MonoBehaviour
         animator = GetComponent<Animator>();
         enemyEyes = GameObject.FindGameObjectWithTag("EnemyEyes").transform;
         audioSource = GetComponent<AudioSource>();
+        health = GetComponent<Health>();
     }
 
     // Update is called once per frame
@@ -34,7 +35,7 @@ public class Zombie : MonoBehaviour
         if (isDead) return;
         //TODO: figure out how to stop zombie movement while attacking.Look @ characterControl script
 
-        if (Health > 0f)
+        if (health.GetCurrentHealth() > 0)
         {
             RaycastHit hit;
 
@@ -66,15 +67,11 @@ public class Zombie : MonoBehaviour
         isDead = true;
         GetComponent<NavMeshAgent>().enabled = false;
         GetComponent<AICharacterControl>().enabled = false;
+        GetComponent<CapsuleCollider>().enabled = false; //prevent further collisions
 
         playClip(Death);
 
         animator.SetTrigger("FallBack");
-    }
-
-    public void Damage(float damage)
-    {
-        Health -= damage;
     }
 
     private void playClip(AudioClip clip)

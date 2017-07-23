@@ -16,7 +16,7 @@ public class Ammo : MonoBehaviour
 
         if (gun.AddAmmo(AmmoCount))
         {          
-            AudioSource.PlayClipAtPoint(AudioClip, transform.position);
+            AudioSource.PlayClipAtPoint(AudioClip, collider.transform.position);
             Destroy(gameObject);
         }
     }

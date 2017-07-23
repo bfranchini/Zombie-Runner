@@ -19,7 +19,7 @@ public class Gun : MonoBehaviour
     private AudioSource audioSource;
     private WaitForSeconds shotDuration = new WaitForSeconds(.07f); //how long laser should be visible after gun is fired   
     private float nextFire; //holds time at which player will be allowed to fire again
-    private Camera camera;
+    private Camera playerCamera;
     private Player player;
     private UI ui;
 
@@ -28,7 +28,7 @@ public class Gun : MonoBehaviour
     {
         animator = GetComponent<Animator>();
         audioSource = GetComponent<AudioSource>();
-        camera = GetComponentInParent<Camera>();
+        playerCamera = GetComponentInParent<Camera>();
         player = FindObjectOfType<Player>();
         magazineBulletCount = MagSize;
         ui = FindObjectOfType<UI>();
@@ -65,19 +65,20 @@ public class Gun : MonoBehaviour
             //camera viewport has coordinates from (0,0) to (1,1). Using .5f for x and y 
             //gets center of camera. 0 for z-axis give position exactly where player is
             //bullets are fired from center of camera
-            var rayOrigin = camera.ViewportToWorldPoint(new Vector3(0.5f, 0.5f, 0));
+            var rayOrigin = playerCamera.ViewportToWorldPoint(new Vector3(0.5f, 0.5f, 0));
 
             RaycastHit hit;
 
             //Debug.DrawRay(rayOrigin, camera.transform.forward * WeaponRange, Color.green);
-            var hitSomething = Physics.Raycast(rayOrigin, camera.transform.forward, out hit, WeaponRange);
+            var hitSomething = Physics.Raycast(rayOrigin, playerCamera.transform.forward, out hit, WeaponRange);
 
-            if (!hitSomething || hit.collider.GetComponent<Zombie>() == null) return;
+            var enemyHealth = hit.collider.GetComponent<Health>();
 
-            var zombie = hit.collider.GetComponentInParent<Zombie>();
-            zombie.Damage(GunDamage);
+            if (!hitSomething || enemyHealth == null) return;
+            
+            enemyHealth.TakeDamage(GunDamage);
 
-            var blood = Instantiate(BloodSquib, hit.point, Quaternion.identity, zombie.transform);
+            var blood = Instantiate(BloodSquib, hit.point, Quaternion.identity, enemyHealth.transform);
             Destroy(blood, .25f);
         }
 
