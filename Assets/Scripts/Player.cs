@@ -32,11 +32,17 @@ public class Player : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Respawn)
-            ReSpawn();
+        if (IsDead)        
+            return;        
 
-        if (IsDead)
-            Debug.Log("Player has died");
+        if (health.GetCurrentHealth() <= 0)
+        {
+            IsDead = true;
+            GetComponent<FirstPersonController>().enabled = false;
+        }
+
+        if (Respawn)
+            ReSpawn();                   
     }
 
     private void ReSpawn()
@@ -65,21 +71,8 @@ public class Player : MonoBehaviour
         Instantiate(LandingAreaPrefab, flarePosition, transform.rotation);
     }
 
-    void OnTriggerEnter(Collider collider)
+    public void Damage(int damage)
     {
-        if (IsDead)
-            return;
-
-        if (collider.transform.tag != "ZombieHand") return;
-
-        var damage = collider.transform.GetComponentInParent<Zombie>().DamagePerHit;
-                    
         ui.UpdateHealth(health.TakeDamage(damage));
-
-        if (health.GetCurrentHealth() <= 0)
-        {
-            IsDead = true;
-            GetComponent<FirstPersonController>().enabled = false;
-        }            
     }
 }
