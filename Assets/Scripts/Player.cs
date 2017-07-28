@@ -38,7 +38,7 @@ public class Player : MonoBehaviour
         if (health.GetCurrentHealth() <= 0)
         {
             IsDead = true;
-            GetComponent<FirstPersonController>().enabled = false;
+            KillPlayer();
         }
 
         if (Respawn)
@@ -74,5 +74,13 @@ public class Player : MonoBehaviour
     public void Damage(int damage)
     {
         ui.UpdateHealth(health.TakeDamage(damage));
+    }
+
+    private void KillPlayer()
+    {
+        GetComponent<FirstPersonController>().enabled = false;
+        var cameraAnimator = GetComponent<Animator>();
+        cameraAnimator.SetTrigger("PlayerDied");
+        ui.GetComponent<Animator>().SetTrigger("PlayerDied");
     }
 }
