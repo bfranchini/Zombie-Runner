@@ -14,7 +14,7 @@ public class ClearAreaDetector : MonoBehaviour
 	void Update () {
         lastCollisionSeconds += Time.deltaTime;
 
-        //Debug.Log("Collisions: " + collisionCount);
+        Debug.Log("Collisions: " + collisionCount);
         
 	    if (collisionCount > 0)
 	        lastCollisionSeconds = 0;
