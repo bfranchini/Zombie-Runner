@@ -10,6 +10,7 @@ public class Eyes : MonoBehaviour
     private float zoomMultiplier = 1.5f; //how much to zoom in
     private float zoomedFieldOfView;
     private Animator gunAnimator;
+    private Player player;
 
 	// Use this for initialization
 	void Start ()
@@ -18,6 +19,7 @@ public class Eyes : MonoBehaviour
 	    defaultFov = playerCamera.fieldOfView;
 	    zoomedFieldOfView = defaultFov / zoomMultiplier;
 	    gunAnimator = FindObjectOfType<Gun>().GetComponent<Animator>();
+	    player = GetComponentInParent<Player>();
 	}
 	
 	// Update is called once per frame
@@ -25,7 +27,7 @@ public class Eyes : MonoBehaviour
 	{
 	    var fov = playerCamera.fieldOfView;
 
-	    if (Input.GetButton("Zoom"))
+	    if (Input.GetButton("Zoom") && !player.IsDead)
 	    {
 	        if (fov > zoomedFieldOfView)
 	        {
