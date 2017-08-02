@@ -25,6 +25,7 @@ public class Player : MonoBehaviour
         }
 
         spawnPoints = spawnParent.GetComponentsInChildren<Transform>();
+        spawn();
         ui = FindObjectOfType<UI>();
         ui.UpdateHealth(health.GetCurrentHealth());
     }
@@ -42,10 +43,10 @@ public class Player : MonoBehaviour
         }
 
         if (Respawn)
-            ReSpawn();                   
+            spawn();                   
     }
 
-    private void ReSpawn()
+    private void spawn()
     {
         Respawn = false;
 
