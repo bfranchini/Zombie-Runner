@@ -12,6 +12,10 @@ public class RadioSystem : MonoBehaviour
 	void Start ()
 	{
 	    audioSource = GetComponent<AudioSource>();
+	    var musicManager = FindObjectOfType<MusicManager>();
+
+        if(musicManager != null)
+            musicManager.StopMusic();
 	}
 	
 	// Update is called once per frame
