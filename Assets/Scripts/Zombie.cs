@@ -10,12 +10,14 @@ public class Zombie : MonoBehaviour
     public float AttackRange = 1.5f;
     public AudioClip[] Talking;
     public AudioClip Death;
+    public GameObject ZombieEyes; 
     private Health health;
     private Animator animator;
     private bool isDead;
     private bool isAttacking;
     private Transform enemyEyes;
     private AudioSource audioSource;
+    private AICharacterControl aiCharacterControl;
     private float nextSpeak; //holds time at which zombie will speak again    
     private int maxSpeakInterval = 5;
     private int minSpeakInterval = 3;
@@ -24,9 +26,11 @@ public class Zombie : MonoBehaviour
     void Start()
     {
         animator = GetComponent<Animator>();
-        enemyEyes = GameObject.FindGameObjectWithTag("EnemyEyes").transform;
+        enemyEyes = ZombieEyes.transform;
         audioSource = GetComponent<AudioSource>();
         health = GetComponent<Health>();
+        aiCharacterControl = GetComponent<AICharacterControl>();
+        aiCharacterControl.target = FindObjectOfType<Player>().transform;
     }
 
     // Update is called once per frame

@@ -69,7 +69,7 @@ public class Gun : MonoBehaviour
 
             RaycastHit hit;
 
-            //Debug.DrawRay(rayOrigin, camera.transform.forward * WeaponRange, Color.green);
+            //Debug.DrawRay(rayOrigin, playerCamera.transform.forward * WeaponRange, Color.green, 1000f);
             var hitSomething = Physics.Raycast(rayOrigin, playerCamera.transform.forward, out hit, WeaponRange);
 
             if(hit.collider == null)

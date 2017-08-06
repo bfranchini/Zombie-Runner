@@ -7,6 +7,7 @@ public class Player : MonoBehaviour
 {
     public GameObject LandingAreaPrefab;        
     public bool IsDead;
+    public bool AllowSpawning = true;
     private Health health;
     private Transform[] spawnPoints;
     private bool Respawn; //used for testing respawn points(make public and toggle)   
@@ -25,7 +26,10 @@ public class Player : MonoBehaviour
         }
 
         spawnPoints = spawnParent.GetComponentsInChildren<Transform>();
-        spawn();
+
+        if (AllowSpawning)
+            spawn();
+
         ui = FindObjectOfType<UI>();
         ui.UpdateHealth(health.GetCurrentHealth());
     }
