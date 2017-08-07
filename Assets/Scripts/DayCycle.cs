@@ -6,7 +6,7 @@ public class DayCycle : MonoBehaviour {
 
     //minutes per second. How many minutes are in one second of the game
     [Tooltip("Number of minutes per second that pass")]
-    public float MinutesPerSecond = 60f;
+    public float MinutesPerSecond = 1f;
       
     private float degreesPerFrame;
 
