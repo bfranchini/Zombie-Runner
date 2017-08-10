@@ -12,6 +12,7 @@ public class Player : MonoBehaviour
     private Transform[] spawnPoints;
     private bool Respawn; //used for testing respawn points(make public and toggle)   
     private UI ui;
+    private bool hasCellPhone;
 
     // Use this for initialization
     void Start()
@@ -87,5 +88,14 @@ public class Player : MonoBehaviour
         var cameraAnimator = GetComponent<Animator>();
         cameraAnimator.SetTrigger("PlayerDied");
         ui.GetComponent<Animator>().SetTrigger("PlayerDied");
+    }
+
+    private void OnTriggerEnter(Collider collider)
+    {
+        if (collider.name == "cellPhone")
+        {
+            hasCellPhone = true;
+            Destroy(collider.gameObject);
+        }            
     }
 }
