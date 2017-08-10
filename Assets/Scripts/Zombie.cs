@@ -30,7 +30,7 @@ public class Zombie : MonoBehaviour
         audioSource = GetComponent<AudioSource>();
         health = GetComponent<Health>();
         aiCharacterControl = GetComponent<AICharacterControl>();
-        aiCharacterControl.target = FindObjectOfType<Player>().transform;
+        aiCharacterControl.SetTarget(FindObjectOfType<Player>().transform);
     }
 
     // Update is called once per frame

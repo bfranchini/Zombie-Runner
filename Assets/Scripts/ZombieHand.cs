@@ -5,10 +5,12 @@ using UnityEngine;
 public class ZombieHand : MonoBehaviour
 {
     private Zombie zombie;
-    // Use this for initialization
+    private UI ui;
+    
     void Start()
     {
         zombie = GetComponentInParent<Zombie>();
+        ui = FindObjectOfType<UI>();
     }
 
     void OnTriggerEnter(Collider collider)
@@ -19,5 +21,6 @@ public class ZombieHand : MonoBehaviour
             return;
 
         player.Damage(zombie.DamagePerHit);        
+        ui.GetComponent<Animator>().SetTrigger("PlayerHit");
     }
 }
