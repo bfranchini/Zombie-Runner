@@ -7,6 +7,7 @@ public class RadioSystem : MonoBehaviour
     public AudioClip InitialHeliCall;
     public AudioClip InitialCallReply;
     private AudioSource audioSource;
+    private UI ui;
 
 	// Use this for initialization
 	void Start ()
@@ -16,6 +17,8 @@ public class RadioSystem : MonoBehaviour
 
         if(musicManager != null)
             musicManager.StopMusic();
+
+	    ui = FindObjectOfType<UI>();
 	}
 	
 	// Update is called once per frame
@@ -33,8 +36,7 @@ public class RadioSystem : MonoBehaviour
 
     private void OnDispatchReply()
     {
-        audioSource.clip = InitialCallReply;
-        audioSource.Play();
+        ui.SetNotificationText("The helicopter will arrive in 1 minute");
         BroadcastMessage("OnDispatchHelicopter");
     }
 }

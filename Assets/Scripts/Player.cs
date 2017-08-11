@@ -5,19 +5,22 @@ using UnityStandardAssets.Characters.FirstPerson;
 
 public class Player : MonoBehaviour
 {
-    public GameObject LandingAreaPrefab;        
+    public GameObject LandingAreaPrefab;
     public bool IsDead;
     public bool AllowSpawning = true;
     private Health health;
     private Transform[] spawnPoints;
     private bool Respawn; //used for testing respawn points(make public and toggle)   
     private UI ui;
-    private bool hasCellPhone;
+    private bool hasPhone;
+    private bool helicopterCalled;
+    private ClearAreaDetector clearAreaDetector;
 
     // Use this for initialization
     void Start()
     {
         var spawnParent = GameObject.Find("Player Spawn Points");
+        clearAreaDetector = FindObjectOfType<ClearAreaDetector>();
         health = GetComponent<Health>();
 
         if (spawnParent == null)
@@ -33,13 +36,14 @@ public class Player : MonoBehaviour
 
         ui = FindObjectOfType<UI>();
         ui.UpdateHealth(health.GetCurrentHealth());
+        ui.SetNotificationText("Find a phone so you can call the helicopter.");
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (IsDead)        
-            return;        
+        if (IsDead)
+            return;
 
         if (health.GetCurrentHealth() <= 0)
         {
@@ -48,7 +52,13 @@ public class Player : MonoBehaviour
         }
 
         if (Respawn)
-            spawn();                   
+            spawn();
+
+        if (Input.GetButtonDown("CallHeli") && hasPhone && !helicopterCalled)
+        {
+            if (clearAreaDetector.CallHelicopter())
+                helicopterCalled = true;
+        }
     }
 
     private void spawn()
@@ -72,14 +82,9 @@ public class Player : MonoBehaviour
     }
 
     private void DropFlare()
-    {        
+    {
         var flarePosition = new Vector3(transform.position.x, LandingAreaPrefab.transform.position.y, transform.position.z);
         Instantiate(LandingAreaPrefab, flarePosition, transform.rotation);
-    }
-
-    public void Damage(int damage)
-    {
-        ui.UpdateHealth(health.TakeDamage(damage));
     }
 
     private void KillPlayer()
@@ -90,12 +95,13 @@ public class Player : MonoBehaviour
         ui.GetComponent<Animator>().SetTrigger("PlayerDied");
     }
 
-    private void OnTriggerEnter(Collider collider)
+    public void Damage(int damage)
     {
-        if (collider.name == "cellPhone")
-        {
-            hasCellPhone = true;
-            Destroy(collider.gameObject);
-        }            
+        ui.UpdateHealth(health.TakeDamage(damage));
+    }
+
+    public void SetPhone(bool value)
+    {
+        hasPhone = value;
     }
 }

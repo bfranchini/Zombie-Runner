@@ -8,6 +8,7 @@ public class UI : MonoBehaviour
     public Text HealthText;
     public Text MagText;
     public Text AmmoText;
+    public Text NotificationText;
 
     public void UpdateHealth(float health)
     {
@@ -22,5 +23,16 @@ public class UI : MonoBehaviour
     public void UpdateAmmoCount(int ammoCount)
     {
         AmmoText.text = ammoCount.ToString();
+    }
+
+    public void SetNotificationText(string text)
+    {
+        NotificationText.text = text;
+        Invoke("ResetNotificationText", 5);
+    }
+
+    public void ResetNotificationText()
+    {
+        NotificationText.text = "";
     }
 }

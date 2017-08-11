@@ -5,7 +5,7 @@ using UnityEngine;
 public class Ammo : MonoBehaviour
 {
     public int AmmoCount = 30;
-    public AudioClip AudioClip;   
+    public AudioClip audioClip;   
 
     public void OnTriggerEnter(Collider collider)
     {
@@ -16,7 +16,7 @@ public class Ammo : MonoBehaviour
 
         if (gun.AddAmmo(AmmoCount))
         {          
-            AudioSource.PlayClipAtPoint(AudioClip, collider.transform.position);
+            AudioSource.PlayClipAtPoint(audioClip, collider.transform.position);
             Destroy(gameObject);
         }
     }
