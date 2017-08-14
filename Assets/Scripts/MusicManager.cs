@@ -69,7 +69,7 @@ public class MusicManager : MonoBehaviour {
         }
         catch (Exception ex)
         {
-
+            Debug.LogError(ex.Message);
             throw;
         }
 	}

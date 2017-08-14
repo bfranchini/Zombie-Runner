@@ -35,4 +35,19 @@ public class UI : MonoBehaviour
     {
         NotificationText.text = "";
     }
+
+    public void DisableCrosshair()
+    {
+        var crosshair = GetComponentInChildren<RawImage>();
+        crosshair.enabled = false; 
+    }
+
+    public void EnableBackToMenuButton()
+    {
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.lockState = CursorLockMode.Confined;
+        Cursor.visible = true;
+        var button = transform.Find("BackToMenuButton");
+        button.gameObject.SetActive(true);
+    }
 }

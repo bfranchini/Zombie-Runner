@@ -8,19 +8,23 @@ public class Player : MonoBehaviour
     public GameObject LandingAreaPrefab;
     public bool IsDead;
     public bool AllowSpawning = true;
+    public bool HasPhone;
     private Health health;
     private Transform[] spawnPoints;
     private bool Respawn; //used for testing respawn points(make public and toggle)   
-    private UI ui;
-    private bool hasPhone;
+    private UI ui;    
     private bool helicopterCalled;
     private ClearAreaDetector clearAreaDetector;
+    private FirstPersonController firstPersonController;
+    private Gun gun; 
 
     // Use this for initialization
     void Start()
     {
         var spawnParent = GameObject.Find("Player Spawn Points");
         clearAreaDetector = FindObjectOfType<ClearAreaDetector>();
+        firstPersonController = GetComponent<FirstPersonController>();
+        gun = GetComponentInChildren<Gun>();
         health = GetComponent<Health>();
 
         if (spawnParent == null)
@@ -54,7 +58,7 @@ public class Player : MonoBehaviour
         if (Respawn)
             spawn();
 
-        if (Input.GetButtonDown("CallHeli") && hasPhone && !helicopterCalled)
+        if (Input.GetButtonDown("CallHeli") && HasPhone && !helicopterCalled)
         {
             if (clearAreaDetector.CallHelicopter())
                 helicopterCalled = true;
@@ -89,7 +93,7 @@ public class Player : MonoBehaviour
 
     private void KillPlayer()
     {
-        GetComponent<FirstPersonController>().enabled = false;
+       firstPersonController.enabled = false;
         var cameraAnimator = GetComponent<Animator>();
         cameraAnimator.SetTrigger("PlayerDied");
         ui.GetComponent<Animator>().SetTrigger("PlayerDied");
@@ -102,6 +106,13 @@ public class Player : MonoBehaviour
 
     public void SetPhone(bool value)
     {
-        hasPhone = value;
+        HasPhone = value;
+    }
+
+    public void EndGame()
+    {
+        firstPersonController.enabled = false;
+        gun.enabled = false;
+        GetComponentInChildren<Eyes>().enabled = false;
     }
 }

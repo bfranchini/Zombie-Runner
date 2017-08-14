@@ -8,6 +8,7 @@ public class Helicopter : MonoBehaviour
     //todo: make private
     private bool called;
     private bool arrived;
+    public bool Landed;
     public float TravelSpeed = 30f; //30f = 5 minutes(9000 meters / 300 seconds)
     public float descentSpeed = 4f; //slow enough descent
 
@@ -15,7 +16,6 @@ public class Helicopter : MonoBehaviour
     private GameObject landingArea;
     private GameObject landingPoint;
     private float travelTime;
-    private Vector3 targetDir;
 
     void Update()
     {
@@ -36,6 +36,9 @@ public class Helicopter : MonoBehaviour
 
         var descentStep = descentSpeed * Time.deltaTime;
         transform.position = Vector3.MoveTowards(transform.position, landingArea.transform.position, descentStep);
+
+        if (transform.position == landingArea.transform.position)
+            Landed = true;
     }
 
     public void OnDispatchHelicopter()
@@ -51,8 +54,6 @@ public class Helicopter : MonoBehaviour
                 Debug.LogError("Could not find landing point");
                 return;
             }
-
-            targetDir = landingPoint.transform.position - transform.position;
 
             called = true;
             Debug.Log("Helicopter called");
