@@ -28,15 +28,16 @@ public class RadioSystem : MonoBehaviour
 
     private void OnMakeInitialHeliCall()
     {
-        audioSource.clip = InitialHeliCall;
-        audioSource.Play();
-
-        Invoke("OnDispatchReply", InitialHeliCall.length + 1);
+        //audioSource.clip = InitialHeliCall;
+        //audioSource.Play();
+        //ui.SetNotificationText("");
+        OnDispatchReply();
+        //Invoke("OnDispatchReply", InitialHeliCall.length + 1);
     }
 
     private void OnDispatchReply()
     {
-        ui.SetNotificationText("The helicopter will arrive in 1 minute");
+        ui.SetNotificationText("The helicopter has been called and will arrive in 1 minute");
         BroadcastMessage("OnDispatchHelicopter");
     }
 }

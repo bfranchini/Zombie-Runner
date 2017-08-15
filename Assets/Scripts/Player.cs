@@ -40,7 +40,8 @@ public class Player : MonoBehaviour
 
         ui = FindObjectOfType<UI>();
         ui.UpdateHealth(health.GetCurrentHealth());
-        ui.SetNotificationText("Find a phone so you can call the helicopter.");
+        ui.SetNotificationText("You have no recollection of how you got here. There are zombies everywhere! Find a way to call the helicopter to save you. Maybe there's " +
+                               "a cell phone lying around somewhere...", 10);
     }
 
     // Update is called once per frame
@@ -82,7 +83,7 @@ public class Player : MonoBehaviour
         if (IsDead) return;
 
         Debug.Log("Found clear area");
-        Invoke("DropFlare", 3f);
+        DropFlare();
     }
 
     private void DropFlare()
@@ -96,6 +97,8 @@ public class Player : MonoBehaviour
        firstPersonController.enabled = false;
         var cameraAnimator = GetComponent<Animator>();
         cameraAnimator.SetTrigger("PlayerDied");
+        ui.DisableCrosshair();
+        ui.EnableBackToMenuButton();
         ui.GetComponent<Animator>().SetTrigger("PlayerDied");
     }
 

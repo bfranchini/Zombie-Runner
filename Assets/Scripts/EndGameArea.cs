@@ -25,7 +25,6 @@ public class EndGameArea : MonoBehaviour
             player.EndGame();
             StopAllAudio();
             Time.timeScale = 0;
-            Debug.Log("End game!!!!!!");
         }
     }
 

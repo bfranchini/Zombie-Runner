@@ -25,10 +25,10 @@ public class UI : MonoBehaviour
         AmmoText.text = ammoCount.ToString();
     }
 
-    public void SetNotificationText(string text)
+    public void SetNotificationText(string text, int timeout = 5)
     {
         NotificationText.text = text;
-        Invoke("ResetNotificationText", 5);
+        Invoke("ResetNotificationText", timeout);
     }
 
     public void ResetNotificationText()
@@ -42,7 +42,12 @@ public class UI : MonoBehaviour
         crosshair.enabled = false; 
     }
 
-    public void EnableBackToMenuButton()
+    public void EnableBackToMenuButton(int invokeSeconds = 2)
+    {
+        Invoke("EnableBackToMenu", invokeSeconds);
+    }
+
+    private void EnableBackToMenu()
     {
         Cursor.lockState = CursorLockMode.None;
         Cursor.lockState = CursorLockMode.Confined;

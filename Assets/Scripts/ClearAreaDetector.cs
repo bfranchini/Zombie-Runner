@@ -17,10 +17,14 @@ public class ClearAreaDetector : MonoBehaviour
     }
 
     // Update is called once per frame    
+    void Update()
+    {
+        Debug.Log("Collisions: " + collisionCount);
+    }
 
     public bool CallHelicopter()
     {
-        if (collisionCount == 0 || clearAreaFound)
+        if (collisionCount <= 0 || clearAreaFound)
         {
             //clear area has been found
             clearAreaFound = true;
