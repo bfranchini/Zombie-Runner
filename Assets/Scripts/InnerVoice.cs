@@ -17,8 +17,8 @@ public class InnerVoice : MonoBehaviour
         //audioSource.Play();
 
         //wait until good landing area is finished playing before calling heli
-//        Invoke("CallHeli", GoodLandingArea.length + 1f);
-            CallHeli();
+//        Invoke("CallHeli", GoodLandingArea.length + 1f);            
+            Invoke("CallHeli", 1);
     }
 
     public void CallHeli()

@@ -19,7 +19,7 @@ public class ClearAreaDetector : MonoBehaviour
     // Update is called once per frame    
     void Update()
     {
-        Debug.Log("Collisions: " + collisionCount);
+        //Debug.Log("Collisions: " + collisionCount);
     }
 
     public bool CallHelicopter()
@@ -42,12 +42,15 @@ public class ClearAreaDetector : MonoBehaviour
         if (collider.tag != "Player" && collider.name != "Ceiling")
         {
             collisionCount++;
-            //Debug.Log("Collided with " + collider.name + " Collisions: " + collisionCount);
+            Debug.Log("Collided with " + collider.name + " Collisions: " + collisionCount);
         }
     }
 
-    void OnTriggerExit()
+    void OnTriggerExit(Collider collider)
     {
-        collisionCount--;
+        if(collisionCount > 0)
+            collisionCount--;
+
+        Debug.Log(collider.name + "Exited. Collisions: " + collisionCount);
     }
 }
