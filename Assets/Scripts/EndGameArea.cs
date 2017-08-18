@@ -15,9 +15,9 @@ public class EndGameArea : MonoBehaviour
         player = FindObjectOfType<Player>();
     }
 
-    void OnTriggerEnter(Collider collider)
+    void OnTriggerEnter(Collider col)
     {
-        if (collider.GetComponent<Player>() != null && helicopter.Landed)
+        if (col.GetComponent<Player>() != null && helicopter.Landed)
         {
             ui.SetNotificationText("Congratulations, you escaped the zombies!");
             ui.DisableCrosshair();

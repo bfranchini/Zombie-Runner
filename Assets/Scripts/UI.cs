@@ -1,7 +1,9 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityStandardAssets.Characters.FirstPerson;
 
 public class UI : MonoBehaviour
 {
@@ -9,6 +11,45 @@ public class UI : MonoBehaviour
     public Text MagText;
     public Text AmmoText;
     public Text NotificationText;
+    private bool gamePaused;
+    private Transform backToMenuButton;
+    private RawImage crosshair;
+    private FirstPersonController firstPersonController;
+    private Eyes eyes;
+    private Gun gun;
+    private bool lockCursor = true;
+
+    private void Start()
+    {
+        backToMenuButton = transform.Find("BackToMenuButton");
+        crosshair = GetComponentInChildren<RawImage>();
+        firstPersonController = FindObjectOfType<FirstPersonController>();
+        eyes = FindObjectOfType<Eyes>();
+        gun = FindObjectOfType<Gun>();
+    }
+
+    private void Update()
+    {
+        if (lockCursor)
+        {
+            Cursor.lockState = CursorLockMode.Locked;
+            Cursor.visible = false;
+        }
+        else
+        {
+            Cursor.lockState = CursorLockMode.Confined;
+            Cursor.visible = true;
+        }
+            
+        if (Input.GetButtonDown("Pause") && !gamePaused)
+        {
+            PauseGame();
+            return;
+        }
+            
+        if(Input.GetButtonDown("Pause") && gamePaused)
+            Unpause();
+    }
 
     public void UpdateHealth(float health)
     {
@@ -37,22 +78,46 @@ public class UI : MonoBehaviour
     }
 
     public void DisableCrosshair()
-    {
-        var crosshair = GetComponentInChildren<RawImage>();
-        crosshair.enabled = false; 
+    {        
+        crosshair.enabled = false;
     }
 
-    public void EnableBackToMenuButton(int invokeSeconds = 2)
+    public void EnableCrosshair()
     {
-        Invoke("EnableBackToMenu", invokeSeconds);
+        crosshair.enabled = true;
     }
 
-    private void EnableBackToMenu()
+    public void EnableBackToMenuButton()
     {
-        Cursor.lockState = CursorLockMode.None;
-        Cursor.lockState = CursorLockMode.Confined;
-        Cursor.visible = true;
-        var button = transform.Find("BackToMenuButton");
-        button.gameObject.SetActive(true);
+        lockCursor = false;
+        backToMenuButton.gameObject.SetActive(true);
+    }
+
+    public void DisableBacktoMenuButton()
+    {
+        lockCursor = true;
+        backToMenuButton.gameObject.SetActive(false);
+    }
+
+    private void PauseGame()
+    {
+        Time.timeScale = 0;
+        gamePaused = true;
+        DisableCrosshair();
+        EnableBackToMenuButton();
+        firstPersonController.enabled = false;
+        eyes.enabled = false;
+        gun.enabled = false;
+    }
+
+    private void Unpause()
+    {
+        Time.timeScale = 1;
+        gamePaused = false;
+        EnableCrosshair();
+        DisableBacktoMenuButton();
+        firstPersonController.enabled = true;
+        eyes.enabled = true;
+        gun.enabled = true;
     }
 }

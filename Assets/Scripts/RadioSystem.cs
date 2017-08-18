@@ -37,7 +37,7 @@ public class RadioSystem : MonoBehaviour
 
     private void OnDispatchReply()
     {
-        ui.SetNotificationText("The helicopter has been called and will arrive in 1 minute");
+        ui.SetNotificationText("The helicopter has been called and will arrive in 30 seconds");
         BroadcastMessage("OnDispatchHelicopter");
     }
 }
