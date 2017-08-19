@@ -56,7 +56,7 @@ public class MusicManager : MonoBehaviour {
             if (thisLevelMusic)
             {
 
-                if(audioSource.clip != null && audioSource.clip.name == thisLevelMusic.name)                
+                if(audioSource.clip != null && audioSource.clip.name == thisLevelMusic.name && audioSource.isPlaying)                
                     return;
                 
                 if (PlayerPrefsManager.HasVoumePref())
