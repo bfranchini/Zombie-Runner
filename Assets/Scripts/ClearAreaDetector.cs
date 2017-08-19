@@ -53,4 +53,10 @@ public class ClearAreaDetector : MonoBehaviour
 
         Debug.Log(collider.name + "Exited. Collisions: " + collisionCount);
     }
+
+    public void DecrementCollision(int count)
+    {
+        if (collisionCount > 0)
+            collisionCount -= count;
+    }
 }
